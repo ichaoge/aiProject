@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeFlow AI - 新一代AI编程助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .typing-animation {
+            overflow: hidden;
+            border-right: .15em solid #3b82f6;
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #3b82f6; }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .code-block {
+            background: #1e293b;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- 导航栏 -->
+    <nav class="fixed w-full top-0 z-50 glass-effect" x-data="{ mobileMenu: false }">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-code text-blue-500 text-2xl"></i>
+                        <span class="text-white text-xl font-bold">CodeFlow AI</span>
+                    </div>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="#features" class="text-gray-300 hover:text-white transition">功能特性</a>
+                        <a href="#mcp-market" class="text-gray-300 hover:text-white transition">MCP市场</a>
+                        <a href="#downloads" class="text-gray-300 hover:text-white transition">下载</a>
+                        <a href="#pricing" class="text-gray-300 hover:text-white transition">定价</a>
+                        <a href="#docs" class="text-gray-300 hover:text-white transition">文档</a>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    <button class="text-gray-300 hover:text-white transition">登录</button>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
+                        免费试用
+                    </button>
+                </div>
+
+                <!-- 移动端菜单按钮 -->
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- 移动端菜单 -->
+            <div x-show="mobileMenu" x-transition class="md:hidden mt-4 py-4 border-t border-gray-700">
+                <div class="flex flex-col space-y-4">
+                    <a href="#features" class="text-gray-300 hover:text-white">功能特性</a>
+                    <a href="#mcp-market" class="text-gray-300 hover:text-white">MCP市场</a>
+                    <a href="#downloads" class="text-gray-300 hover:text-white">下载</a>
+                    <a href="#pricing" class="text-gray-300 hover:text-white">定价</a>
+                    <a href="#docs" class="text-gray-300 hover:text-white">文档</a>
+                    <button class="text-left text-gray-300 hover:text-white">登录</button>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        免费试用
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section class="hero-gradient min-h-screen flex items-center justify-center pt-20">
+        <div class="container mx-auto px-6 py-20">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-white">
+                    <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                        新一代<br>
+                        <span class="text-blue-400">AI编程助手</span>
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8">
+                        集成Claude AI代理、MCP插件生态、Git版本管理于一体的智能开发工具<br>
+                        让编程更高效，让代码更智能
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 mb-12">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition transform hover:scale-105">
+                            <i class="fas fa-download mr-2"></i>立即下载
+                        </button>
+                        <button class="border border-gray-400 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-gray-900 transition">
+                            <i class="fas fa-play-circle mr-2"></i>观看演示
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-8 text-gray-400">
+                        <div class="flex items-center">
+                            <i class="fas fa-users mr-2"></i>
+                            <span>10万+ 开发者选择</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-star mr-2 text-yellow-400"></i>
+                            <span>4.9/5 用户评分</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="float-animation">
+                        <div class="code-block p-6 text-green-400 shadow-2xl">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex space-x-2">
+                                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                    <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                </div>
+                                <span class="text-gray-400 text-sm">CodeFlow AI</span>
+                            </div>
+                            <pre class="text-sm"><code><span class="text-blue-400">const</span> <span class="text-yellow-300">aiAssistant</span> = <span class="text-blue-400">new</span> <span class="text-green-400">CodeFlowAI</span>({
+    model: <span class="text-green-300">'claude-3.5-sonnet'</span>,
+    features: [<span class="text-green-300">'code-generation'</span>, <span class="text-green-300">'debugging'</span>],
+    integrations: [<span class="text-green-300">'git'</span>, <span class="text-green-300">'mcp'</span>]
+});
+
+<span class="text-gray-500">// AI帮你自动生成代码</span>
+<span class="keyword">await</span> aiAssistant.<span class="text-blue-300">generateComponent</span>(<span class="text-green-300">'dashboard'</span>);</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- 装饰元素 -->
+                    <div class="absolute -top-4 -right-4 w-20 h-20 bg-blue-500 rounded-full opacity-20 blur-xl"></div>
+                    <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-500 rounded-full opacity-20 blur-xl"></div>
+                </div>
+            </div>
+
+            <div class="text-center mt-16 scroll-indicator">
+                <i class="fas fa-chevron-down text-2xl text-gray-400"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能特性展示 -->
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">强大功能，助力开发</h2>
+                <p class="text-xl text-gray-600">集成最新AI技术，提供全方位编程支持</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 功能卡片1: Claude AI代理 -->
+                <div class="card-hover bg-gradient-to-br from-blue-50 to-indigo-100 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-robot text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Claude AI代理</h3>
+                    <p class="text-gray-600 mb-4">
+                        集成Claude 3.5 Sonnet模型，提供智能代码生成、bug修复、代码重构等服务
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><i class="fas fa-check text-blue-500 mr-2"></i>自然语言交互</li>
+                        <li><i class="fas fa-check text-blue-500 mr-2"></i>多语言代码支持</li>
+                        <li><i class="fas fa-check text-blue-500 mr-2"></i>实时语法检查</li>
+                    </ul>
+                </div>
+
+                <!-- 功能卡片2: MCP市场 -->
+                <div class="card-hover bg-gradient-to-br from-green-50 to-emerald-100 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-green-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-store text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">MCP插件市场</h3>
+                    <p class="text-gray-600 mb-4">
+                        丰富的插件生态系统，支持自定义扩展，满足各种开发需求
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>1000+ 插件选择</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>一键安装部署</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>社区驱动开发</li>
+                    </ul>
+                </div>
+
+                <!-- 功能卡片3: Git版本管理 -->
+                <div class="card-hover bg-gradient-to-br from-orange-50 to-amber-100 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-orange-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-code-branch text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Git版本管理</h3>
+                    <p class="text-gray-600 mb-4">
+                        可视化Git操作，智能提交建议，让版本控制变得简单直观
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>可视化分支管理</li>
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>智能冲突解决</li>
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>自动提交生成</li>
+                    </ul>
+                </div>
+
+                <!-- 功能卡片4: 会话记录 -->
+                <div class="card-hover bg-gradient-to-br from-purple-50 to-pink-100 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-purple-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-history text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">会话记录</h3>
+                    <p class="text-gray-600 mb-4">
+                        完整保存编程对话历史，支持知识库构建和快速检索
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><i class="fas fa-check text-purple-500 mr-2"></i>云端同步存储</li>
+                        <li><i class="fas fa-check text-purple-500 mr-2"></i>智能搜索功能</li>
+                        <li><i class="fas fa-check text-purple-500 mr-2"></i>知识图谱构建</li>
+                    </ul>
+                </div>
+
+                <!-- 功能卡片5: 终端直连 -->
+                <div class="card-hover bg-gradient-to-br from-red-50 to-rose-100 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-red-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-terminal text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">终端直连</h3>
+                    <p class="text-gray-600 mb-4">
+                        内置强大终端，支持多标签页，命令智能提示和自动补全
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><i class="fas fa-check text-red-500 mr-2"></i>多Shell支持</li>
+                        <li><i class="fas fa-check text-red-500 mr-2"></i>命令智能提示</li>
+                        <li><i class="fas fa-check text-red-500 mr-2"></i>脚本模板库</li>
+                    </ul>
+                </div>
+
+                <!-- 功能卡片6: 智能调试 -->
+                <div class="card-hover bg-gradient-to-br from-teal-50 to-cyan-100 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-teal-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-bug text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">智能调试</h3>
+                    <p class="text-gray-600 mb-4">
+                        AI驱动的bug检测和修复建议，大幅提升调试效率
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><i class="fas fa-check text-teal-500 mr-2"></i>自动错误检测</li>
+                        <li><i class="fas fa-check text-teal-500 mr-2"></i>修复方案推荐</li>
+                        <li><i class="fas fa-check text-teal-500 mr-2"></i>性能优化建议</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP市场展示 -->
+    <section id="mcp-market" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">MCP插件市场</h2>
+                <p class="text-xl text-gray-600">丰富的插件生态，扩展你的开发能力</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- 插件分类 -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">热门分类</h3>
+                    <div class="space-y-4">
+                        <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-database text-blue-500"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">数据库工具</h4>
+                                        <p class="text-gray-600 text-sm">MySQL, PostgreSQL, MongoDB</p>
+                                    </div>
+                                </div>
+                                <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">156个插件</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-cloud text-green-500"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">云服务集成</h4>
+                                        <p class="text-gray-600 text-sm">AWS, Azure, 阿里云</p>
+                                    </div>
+                                </div>
+                                <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">89个插件</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-palette text-purple-500"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">UI框架</h4>
+                                        <p class="text-gray-600 text-sm">React, Vue, Angular</p>
+                                    </div>
+                                </div>
+                                <span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm">234个插件</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-shield-alt text-orange-500"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">安全测试</h4>
+                                        <p class="text-gray-600 text-sm">漏洞扫描, 代码审计</p>
+                                    </div>
+                                </div>
+                                <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm">67个插件</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 热门插件 -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">热门推荐</h3>
+                    <div class="space-y-4">
+                        <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h4 class="font-semibold text-lg">Docker Helper</h4>
+                                    <div class="flex items-center space-x-2 mt-1">
+                                        <div class="flex text-yellow-400">
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                        </div>
+                                        <span class="text-gray-600 text-sm">(2.3k)</span>
+                                    </div>
+                                </div>
+                                <span class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs">免费</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">智能Docker容器管理，自动生成Dockerfile和docker-compose配置</p>
+                            <button class="text-blue-500 hover:text-blue-600 font-medium">
+                                安装插件 <i class="fas fa-download ml-1"></i>
+                            </button>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h4 class="font-semibold text-lg">API Tester Pro</h4>
+                                    <div class="flex items-center space-x-2 mt-1">
+                                        <div class="flex text-yellow-400">
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star-half-alt text-sm"></i>
+                                        </div>
+                                        <span class="text-gray-600 text-sm">(1.8k)</span>
+                                    </div>
+                                </div>
+                                <span class="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs">付费</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">强大的API测试工具，支持RESTful和GraphQL接口调试</p>
+                            <button class="text-blue-500 hover:text-blue-600 font-medium">
+                                安装插件 <i class="fas fa-download ml-1"></i>
+                            </button>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h4 class="font-semibold text-lg">Code Translator</h4>
+                                    <div class="flex items-center space-x-2 mt-1">
+                                        <div class="flex text-yellow-400">
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                        </div>
+                                        <span class="text-gray-600 text-sm">(3.1k)</span>
+                                    </div>
+                                </div>
+                                <span class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs">免费</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">多语言代码转换，支持Python、Java、JavaScript等主流语言</p>
+                            <button class="text-blue-500 hover:text-blue-600 font-medium">
+                                安装插件 <i class="fas fa-download ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 下载区域 -->
+    <section id="downloads" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">立即下载</h2>
+                <p class="text-xl text-gray-600">支持多平台，随时随地开始编程</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <!-- Windows -->
+                <div class="text-center p-8 bg-blue-50 rounded-xl hover:bg-blue-100 transition cursor-pointer">
+                    <div class="w-20 h-20 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <i class="fab fa-windows text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Windows</h3>
+                    <p class="text-gray-600 mb-4">支持 Windows 10/11</p>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition">
+                        <i class="fas fa-download mr-2"></i>下载exe
+                    </button>
+                </div>
+
+                <!-- macOS -->
+                <div class="text-center p-8 bg-gray-50 rounded-xl hover:bg-gray-100 transition cursor-pointer">
+                    <div class="w-20 h-20 bg-gray-800 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <i class="fab fa-apple text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">macOS</h3>
+                    <p class="text-gray-600 mb-4">支持 macOS 11+</p>
+                    <button class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-lg transition">
+                        <i class="fas fa-download mr-2"></i>下载dmg
+                    </button>
+                </div>
+
+                <!-- Linux -->
+                <div class="text-center p-8 bg-orange-50 rounded-xl hover:bg-orange-100 transition cursor-pointer">
+                    <div class="w-20 h-20 bg-orange-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <i class="fab fa-linux text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Linux</h3>
+                    <p class="text-gray-600 mb-4">支持 Ubuntu/CentOS</p>
+                    <button class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg transition">
+                        <i class="fas fa-download mr-2"></i>下载AppImage
+                    </button>
+                </div>
+            </div>
+
+            <!-- 二维码下载 -->
+            <div class="mt-16 text-center">
+                <div class="inline-block p-8 bg-gray-50 rounded-xl">
+                    <div class="w-32 h-32 bg-gray-300 mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-qrcode text-gray-600 text-4xl"></i>
+                    </div>
+                    <p class="text-gray-600">扫码下载移动端</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户评价 -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">用户评价</h2>
+                <p class="text-xl text-gray-600">来自全球开发者的真实反馈</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://picsum.photos/seed/user1/50/50.jpg" alt="用户头像" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">张明</h4>
+                            <p class="text-gray-600 text-sm">高级前端工程师</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600">
+                        "CodeFlow AI彻底改变了我的编程方式。AI助手能够准确理解我的需求，生成的代码质量很高，大大提升了开发效率。"
+                    </p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://picsum.photos/seed/user2/50/50.jpg" alt="用户头像" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">李娜</h4>
+                            <p class="text-gray-600 text-sm">全栈开发者</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600">
+                        "MCP插件市场太棒了！可以找到各种实用的工具扩展功能，Git版本管理也很直观，强烈推荐给所有开发者。"
+                    </p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://picsum.photos/seed/user3/50/50.jpg" alt="用户头像" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">王伟</h4>
+                            <p class="text-gray-600 text-sm">技术负责人</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="text-gray-600">
+                        "团队协作功能很实用，会话记录帮助我们建立了知识库。终端集成的也很流畅，是一个功能全面的开发工具。"
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA区域 -->
+    <section class="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-4">准备提升你的编程体验了吗？</h2>
+            <p class="text-xl mb-8">加入十万开发者，体验AI驱动的智能编程</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition">
+                    免费试用30天
+                </button>
+                <button class="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-600 transition">
+                    联系销售
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-code text-blue-500 text-xl"></i>
+                        <span class="text-xl font-bold">CodeFlow AI</span>
+                    </div>
+                    <p class="text-gray-400">
+                        新一代AI编程助手，让编程更高效，让代码更智能。
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4">产品</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">功能特性</a></li>
+                        <li><a href="#" class="hover:text-white transition">下载</a></li>
+                        <li><a href="#" class="hover:text-white transition">定价</a></li>
+                        <li><a href="#" class="hover:text-white transition">更新日志</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4">资源</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">文档</a></li>
+                        <li><a href="#" class="hover:text-white transition">API参考</a></li>
+                        <li><a href="#" class="hover:text-white transition">社区</a></li>
+                        <li><a href="#" class="hover:text-white transition">博客</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4">联系我们</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-discord text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 CodeFlow AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 导航栏背景透明度控制
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-gray-900');
+                nav.classList.remove('glass-effect');
+            } else {
+                nav.classList.remove('bg-gray-900');
+                nav.classList.add('glass-effect');
+            }
+        });
+
+        // 下载按钮点击事件
+        document.querySelectorAll('button').forEach(button => {
+            if (button.textContent.includes('下载')) {
+                button.addEventListener('click', function() {
+                    // 模拟下载开始
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>准备下载...';
+                    this.disabled = true;
+
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-check mr-2"></i>下载开始';
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.disabled = false;
+                        }, 2000);
+                    }, 1500);
+                });
+            }
+        });
+
+        // 插件安装按钮
+        document.querySelectorAll('button').forEach(button => {
+            if (button.textContent.includes('安装插件')) {
+                button.addEventListener('click', function() {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> 安装中...';
+                    this.disabled = true;
+
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-check mr-1"></i> 已安装';
+                        this.classList.remove('text-blue-500');
+                        this.classList.add('text-green-500');
+                    }, 2000);
+                });
+            }
+        });
+
+        // 页面加载动画
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+        });
+
+        // 添加滚动显示动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 观察所有卡片元素
+        document.querySelectorAll('.card-hover').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
